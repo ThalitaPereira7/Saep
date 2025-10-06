@@ -1,71 +1,69 @@
-//formas para fazer a validação de um formulário usando o REACT
-//zod, trabalha com mais componentes para fazer sentido na sua valaidação
-//Os triamigos são "zod" "useForm", //resolvers (mãezona)
+// Diferentes jeitos de validar formulários em React
+// O Zod é útil porque permite estruturar validações de forma detalhada
+// A combinação mais comum é usar: "zod", "useForm" e o "resolver" (faz a ponte entre eles)
 import { useForm } from "react-hook-form";
 import { set, z } from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-//zod campo a campo o que eu valido, e ql a mensagem que eu exibo , se der um erro
+// No zod definimos cada regra de validação e a mensagem de erro exibida quando algo não estiver certo
 
 const schemaCadUsuario = z.object({
     username: z.string()
-        .min(1, 'Preencha o campo username, por favor')
-        .max(100, 'O campo permite até 100 caracteres')
-        .regex(/^[A-Za-zÀ-ú ]+$/, 'O campo username só aceita letras e espaços')
+        .min(1, 'O campo username é obrigatório')
+        .max(100, 'Máximo de 100 caracteres permitidos')
+        .regex(/^[A-Za-zÀ-ú ]+$/, 'Somente letras e espaços são aceitos')
         .refine((str) => str.trim().length > 0, {
-            message: "Preencha o campo usuario",
+            message: "O campo usuário não pode ficar vazio",
         }),
     email: z.string()
-        .min(1, 'Preencha o campo email, por favor')
-        .max(50, 'O campo permite até 50 caracteres')
-        .email('Insira um email válido')
+        .min(1, 'O campo email é obrigatório')
+        .max(50, 'O email pode ter até 50 caracteres')
+        .email('Digite um email válido')
         .refine((str) => str.trim().length > 0, {
-            message: "Preencha o campo email",
+            message: "O campo email não pode ficar em branco",
         }),
 });
 
-// Crianção do componente
+// Definição do componente
 export function CadUsuario() {
-    // 
+    // Desestruturando funções do useForm
     const {
-        register,//registra para mim 
-        handleSubmit,// no momento em que eu submeter(clicar em cadastrar)
-        formState: { errors }, //o que ta no formulario // se der ruim deixa na variavel errors
-        setValue,
-        reset // PERGUNTAR AQUI <----------------------------------------------------------
-    } = useForm({ resolver: zodResolver(schemaCadUsuario) });//mamae junta os 3 e faz a validação
+        register, // conecta o input ao hook
+        handleSubmit, // executa quando o formulário é enviado
+        formState: { errors }, // contém os erros gerados durante a validação
+        setValue, // permite ajustar valores manualmente
+        reset // usado para limpar o formulário após o envio
+    } = useForm({ resolver: zodResolver(schemaCadUsuario) }); // aqui juntamos zod + react-hook-form
 
     async function obterDados(data) {
-
-        //chamada a API 
+        // Faz a requisição para a API
         try {
             await axios.post('http://127.0.0.1:8000/user/', data);
-            alert("Usuário cadastrado com sucesso!!");
-
-            reset();
-            // se der problema mostro uma mensagem de erro
+            alert("Usuário cadastrado com sucesso!");
+            reset(); // limpa os campos depois do sucesso
         } catch (error) {
+            // caso o email já esteja cadastrado, tratamos essa situação
             if (error.request.response === "{\"email\":[\"user with this email already exists.\"]}") {
-                alert("E-mail já cadastrado!");
+                alert("E-mail já registrado!");
                 return
             }
-            console.error("Deu ruim hein", error)
+            console.error("Erro durante o cadastro:", error)
         }
-
     }
+
     return (
-        //no momento da submissao chamo as funções 
+        // Ao enviar o formulário, a função handleSubmit chama obterDados
         <form className="formulario" onSubmit={handleSubmit(obterDados)}>
             <h2>Cadastro de Usuário</h2>
             <label>Username:</label>
-            {/* o register pega o valor inserido num campo input */}
+            {/* register captura o valor digitado no input */}
             <input
                 type="text"
                 placeholder="Digite o nome..."
                 {...register('username')}
                 onBlur={(e) => setValue("username", e.target.value.trim())}
             />
-            {/* Se der erro eu crio um novo paragrafo para exibir a mensagem */}
+            {/* Caso exista erro de validação, exibimos a mensagem aqui */}
             {errors.username && <p>{errors.username.message}</p>}
 
             <label>E-mail:</label>
@@ -74,7 +72,6 @@ export function CadUsuario() {
                 placeholder="email@dominio.com.br"
                 {...register('email')}
                 onBlur={(e) => setValue("email", e.target.value.trim())}
-
             />
             {errors.email && <p>{errors.email.message}</p>}
 
