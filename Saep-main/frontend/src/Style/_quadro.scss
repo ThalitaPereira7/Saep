@@ -1,0 +1,10 @@
+@use './variaveis' as *;
+
+.colunas {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  min-height: 100vh;
+  flex-wrap: wrap;
+}

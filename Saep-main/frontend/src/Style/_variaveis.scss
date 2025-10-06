@@ -1,0 +1,25 @@
+$background: #ffffff;
+$principal: #0b0211; // roxo moderno
+$cor-secundaria: #9575cd; 
+$cor-destaque: #333333;
+$button: #ff4081; // rosa vibrante
+$borda-arrendondada: 12px;
+
+// 🔤 Tipografia nova
+$font-principal: 'Poppins', sans-serif;
+$font-base-size: 16px;
+
+// Reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: $background;
+  font-family: $font-principal;
+  font-size: $font-base-size;
+  color: $cor-destaque;
+  line-height: 1.6;
+}

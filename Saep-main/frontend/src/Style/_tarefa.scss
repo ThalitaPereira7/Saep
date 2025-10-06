@@ -1,0 +1,83 @@
+@use './variaveis' as *;
+
+.tarefa {
+  background-color: lighten($cor-secundaria, 40%);
+  padding: 2rem;
+  border-radius: $borda-arrendondada;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center; // título e textos centralizados
+  gap: 1.2rem;
+
+  h3 {
+    font-size: 1.5rem;
+    color: $principal;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 1rem;
+    max-width: 90%;
+    color: $cor-destaque;
+  }
+
+  dl {
+    width: 100%;
+    text-align: left; // muda contraste: título no centro, detalhes alinhados à esquerda
+    dt {
+      font-weight: bold;
+      color: $principal;
+    }
+    dd {
+      margin: 0 0 0.5rem 1rem;
+    }
+  }
+
+  button {
+    background: $button;
+    border: none;
+    border-radius: $borda-arrendondada;
+    padding: 0.8rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      background: darken($button, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+  // Formulário de status
+  .formStatus {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    label {
+      font-weight: 500;
+      color: $cor-destaque;
+    }
+
+    select {
+      padding: 0.6rem;
+      border: 1px solid lighten($cor-destaque, 25%);
+      border-radius: $borda-arrendondada;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border 0.3s ease;
+
+      &:focus {
+        border-color: $cor-destaque;
+      }
+    }
+
+    button {
+      align-self: flex-start;
+    }
+  }
+
